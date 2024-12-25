@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>个人运动记录</title>
+    <style>
+        .logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 50px; /* 调整大小 */
+            height: auto;
+            pointer-events: none; /* 禁止点击 */
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .day {
+            border: 1px solid #a8d600;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+        }
+        .marked {
+            background-color: #a8d600;
+            color: white;
+        }
+        .month {
+            grid-column: span 7;
+            text-align: center;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="img/01.jpg" alt="Tennis Logo" class="logo">
+        <h1>网球知识博客</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">首页</a></li>
+                <li><a href="category.html">个人运动记录</a></li>
+                <li><a href="search.html">搜索</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>个人运动记录</h2>
+        
+        <h3>2025年日历</h3>
+        <div class="calendar" id="calendar"></div>
+    </main>
+    <footer>
+        <p>©个人网球知识博客</p>
+    </footer>
+
+    <script>
+        const calendarElement = document.getElementById('calendar');
+        const year = 2025;
+        const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        const monthNames = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"];
+        
+        // 处理闰年
+        if ((year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0)) {
+            monthDays[1] = 29;
+        }
+
+        // 生成日历
+        for (let month = 0; month < 12; month++) {
+            // 添加月份标题
+            const monthTitle = document.createElement('div');
+            monthTitle.classList.add('month');
+            monthTitle.textContent = year + " " + monthNames[month];
+            calendarElement.appendChild(monthTitle);
+
+            for (let day = 1; day <= monthDays[month]; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.classList.add('day');
+                dayElement.textContent = day;
+                const dateValue = `${year}-${month + 1}-${day}`; // 格式化日期
+
+                // 检查localStorage中的状态
+                if (localStorage.getItem(dateValue) === 'true') {
+                    dayElement.classList.add('marked'); // 如果状态为true，添加marked类
+                }
+
+                // 添加点击事件
+                dayElement.addEventListener('click', () => {
+                    dayElement.classList.toggle('marked');
+                    localStorage.setItem(dateValue, dayElement.classList.contains('marked')); // 存储状态
+                });
+
+                calendarElement.appendChild(dayElement);
+            }
+        }
+    </script>
+</body>
+</html> 
